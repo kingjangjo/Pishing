@@ -13,7 +13,7 @@ public class UIManager : MonoBehaviour
     public Text storageText;
     public Slider storoageSlider;
     public Text Day;
-    public Text Time;
+    public Text curTime;
 
     [Header("시계 설정")]
     public float realSecondsPerHour = 25f;
@@ -44,6 +44,7 @@ public class UIManager : MonoBehaviour
     }
     public void updateTime()
     {
+        CalCulateTime();
         float currentTime = GameManager.instance.playerData.currentTime;
 
         float gameMinutes = currentTime * (60f / realSecondsPerHour) + startHour * 60f;
@@ -56,6 +57,14 @@ public class UIManager : MonoBehaviour
         if (hour12 == 0) hour12 = 12;
         string period = hour24 < 12 ? "AM" : "PM";
 
-        Time.text = string.Format("{0:D2}:{1:D2} {2}", hour12, minute, period);
+        curTime.text = string.Format("{0:D2}:{1:D2} {2}", hour12, minute, period);
+    }
+    public void CalCulateTime()
+    {
+        GameManager.instance.playerData.currentTime += Time.deltaTime;
+        if (GameManager.instance.playerData.currentTime >= 600)
+        {
+            GameManager.instance.playerData.day++;
+        }
     }
 }
